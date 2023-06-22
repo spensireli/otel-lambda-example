@@ -1,0 +1,12 @@
+aws-cdk-lib
+aws_cdk.aws_apigatewayv2_alpha
+aws_cdk.aws_apigatewayv2_integrations_alpha
+aws_cdk.aws_apigatewayv2_authorizers_alpha
+constructs
+boto3
+mypy
+pylama
+pytest
+pytest-cov
+pytest-mock
+upmce-cdk-utils

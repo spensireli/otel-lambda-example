@@ -1,0 +1,13 @@
+*.log
+.idea/*
+*venv/
+.orig
+/cdk.out/
+/build/
+.pytest_cache
+*.pyc
+.coverage
+/coverage.xml
+.DS_Store
+cdk.context.json
+.mypy_cache*
