@@ -32,3 +32,68 @@ class ApiExample(Construct):
                 logging_level=apigateway.MethodLoggingLevel.INFO
             )
         )
+
+
+        self.hello_world_role = iam.Role(
+                    self, "hello-world-role",
+                    assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
+                    description='Hello World Lambda Role',
+                    managed_policies=[
+                        iam.ManagedPolicy.from_aws_managed_policy_name('service-role/AWSLambdaVPCAccessExecutionRole'),
+                    ]
+                )
+
+
+        self.lambda_function_variables = {
+            'AWS_LAMBDA_EXEC_WRAPPER': '/opt/otel-instrument',
+            'OPENTELEMETRY_COLLECTOR_CONFIG_FILE': '/var/task/config.yaml'
+        }
+
+
+        self.policy = iam.Policy(
+            self, "policy",
+            statements=[
+                iam.PolicyStatement(
+                    sid='AssumeRolePermissions',
+                    actions=['sts:AssumeRole'],
+                    resources=[f'arn:aws:iam::*:role/dataplane-{id_.replace("_", "-")}']
+                ),
+                iam.PolicyStatement(
+                    sid='XrayPermissions',
+                    actions=["logs:PutLogEvents",
+                             "logs:CreateLogGroup",
+                             "logs:CreateLogStream",
+                             "logs:DescribeLogStreams",
+                             "logs:DescribeLogGroups",
+                             "logs:PutRetentionPolicy",
+                             "xray:PutTraceSegments",
+                             "xray:PutTelemetryRecords",
+                             "xray:GetSamplingRules",
+                             "xray:GetSamplingTargets",
+                             "xray:GetSamplingStatisticSummaries",
+                             "ssm:GetParameters"],
+                    resources=['*']
+                )
+            ]
+        )
+        self.policy.attach_to_role(self.hello_world_role)
+
+
+        self.function = aws_lambda.Function(
+            self, "function",
+            function_name=f'hello-{id_.replace("_", "-")}',
+            runtime=cast(aws_lambda.Runtime, aws_lambda.Runtime.PYTHON_3_9),
+            handler=f'lib.lambda_code.{id_}.{id_}.lambda_handler',
+            code=aws_lambda.Code.from_asset(f'./build/{id_}.zip'),
+            role=self.hello_world_role,
+            layers=[aws_lambda.LayerVersion.from_layer_version_arn(
+                self, 'adot-layer',
+                Fn.sub(body='arn:aws:lambda:${AWS::Region}:901920570463:layer:aws-otel-python-amd64-ver-1-17-0:1')
+            )],
+            tracing=aws_lambda.Tracing.ACTIVE,
+            environment=self.lambda_function_variables,
+            environment_encryption=self.encryption_key,
+            timeout=Duration.seconds(900),
+            retry_attempts=0,
+        )
+

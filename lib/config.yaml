@@ -1,0 +1,30 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  logging:
+  awsxray:
+  awsemf:
+      log_group_name: 'spenco-ADOTLogGroup'
+      log_stream_name: 'spenco'
+      namespace: 'spenco'
+      output_destination: 'cloudwatch'
+      dimension_rollup_option: 'ZeroAndSingleDimensionRollup'
+      log_retention: 60
+      detailed_metrics: true
+      max_retries: 5
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [awsxray]
+    metrics:
+      receivers: [otlp]
+      exporters: [awsemf, logging]
+  telemetry:
+    metrics:
+      address: localhost:8888
