@@ -97,3 +97,6 @@ class ApiExample(Construct):
             retry_attempts=0,
         )
 
+        self.function_integration = apigateway.LambdaIntegration(self.function)
+        self.hello_world_api = self.rest_api.root.add_resource("hello")
+        self.hello_world_api.add_method(http_method="GET", integration=self.function_integration)
