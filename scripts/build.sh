@@ -40,8 +40,10 @@ build_lambda_fn () {
       install --compile -r /build/requirements/$LAMBDA.txt -t /build/build/lambda_build_dir/$LAMBDA
   else
     cp -r "$DEST"/"$BUILD_DIR"/common/ "$LAMBDA_BUILD_DIR"/lib/lambda_code/"$LAMBDA"
+
   fi
   mkdir "$LAMBDA_BUILD_DIR"/vendor
+  cp "$BASE/lib/config.yaml" "$LAMBDA_BUILD_DIR"/;
   cd "$LAMBDA_BUILD_DIR" || (echo "Could not cd to $LAMBDA_BUILD_DIR" && exit 1)
   echo "Lambda - $LAMBDA"
   echo "Zipping: $(pwd)" && zip -Drq ../../"$LAMBDA".zip ./* || \

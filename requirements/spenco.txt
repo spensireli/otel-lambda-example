@@ -1,1 +1,4 @@
 -r common.txt
+opentelemetry-distro[otlp]
+opentelemetry-sdk-extension-aws
+opentelemetry-propagator-aws-xray
