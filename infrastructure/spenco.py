@@ -100,3 +100,9 @@ class ApiExample(Construct):
         self.function_integration = apigateway.LambdaIntegration(self.function)
         self.hello_world_api = self.rest_api.root.add_resource("hello")
         self.hello_world_api.add_method(http_method="GET", integration=self.function_integration)
+
+        self.sleepy_api = self.rest_api.root.add_resource("sleepy")
+        self.sleepy_api.add_method(http_method="GET", integration=self.function_integration)
+
+        self.broken_api = self.rest_api.root.add_resource("broken")
+        self.broken_api.add_method(http_method="GET", integration=self.function_integration)
