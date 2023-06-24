@@ -3,9 +3,8 @@ from constructs import Construct
 from infrastructure import spenco
 
 
-ACCOUNT_ID = '427331153417'
 REGION = 'us-east-1'
-ENVIRONMENT = Environment(account=ACCOUNT_ID, region=REGION)
+ENVIRONMENT = Environment(region=REGION)
 
 
 class Deploy(Stack):
