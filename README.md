@@ -1,8 +1,12 @@
-# otel-lambda-example
+# OTEL with AWS Lambda and AWSEMF Exporter
 
 This repository showcases how to use OpenTelemetry with AWS Lambda and X-Ray for enhanced observability.
 
+For information on what each component is doing see the [Project Breakdown](#Project Breakdown) section.
+
 ## Deploying This Project
+
+This project requires AWS CDK `2.85.0` or higher. 
 
 ```bash scripts/build.sh```
 
@@ -25,13 +29,23 @@ function failed using OTEL + X-Ray.
 
 [OpenTelemetry](https://opentelemetry.io/) is a collection of tools, APIs, and SDKs. Use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) to help you analyze your software’s performance and behavior.
 
-## What is X-Ray?
+Some benefits to using OTEL over proprietary distributing tracing technology are:
 
-[AWS X-Ray](https://aws.amazon.com/xray/) provides a complete view of requests as they travel through your application and filters visual data across payloads, functions, traces, services, APIs, and more with no-code and low-code motions.
+- Standardization of how telemetry data is collected and reported on.
+- Prevents vendor lock-in. 
+- Provides out of the box support with a number of third-party [vendors](https://opentelemetry.io/ecosystem/vendors/).
+- OpenSource & Free
 
-## OTEL Components Explained
+# Project Breakdown
 
+## Lessons Learned
 
+- Documentation explaining the integration of OTEl and X-Ray is lacking. Lots of articles but little explains the how and why.
+- OTEL Version changes can impact operatbility with X-Ray.
+- How OTEL is used in a production setting.
+- How to send OTEL Metrics to CloudWatch Metrics using AWS EMF Exporter.
+- There exists an OTEL Lambda Layer maintained by AWS
 
+## OTEL Layer
 
-
+[Here](./infrastructure/spenco.py#L91)
