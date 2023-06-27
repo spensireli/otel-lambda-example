@@ -71,7 +71,7 @@ This can be useful for adding metadata about the execution to your traces.
 
 ## Metrics
 
-Metrics can be published but first they must be [initialized](./lib/lambda_code/spenco/spenco.py#L8-15). 
+Metrics can be published but first they must be [initialized](./lib/lambda_code/spenco/spenco.py#L8-L15). 
 
 Here I am creating a simple success and failure metric. The metric is then called when a [successful operation](./lib/lambda_code/spenco/spenco.py#L85) happens, or when a [failure](./lib/lambda_code/spenco/spenco.py#L97)
 happens. 
