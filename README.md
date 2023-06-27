@@ -48,4 +48,44 @@ Some benefits to using OTEL over proprietary distributing tracing technology are
 
 ## OTEL Layer
 
-[Here](./infrastructure/spenco.py#L91)
+[Here](./infrastructure/spenco.py#L91) we see a Lambda Layer that is being imported that contains the necessary OTEL packages.
+After doing some digging I was able to find the information located on an [AWS OTEL Project](https://aws-otel.github.io/docs/getting-started/lambda/lambda-python) page.
+This Layer is owned and managed by AWS for use with OTEL. 
+
+The consistency of this layer seems to be spotty. So it may be worth rolling your own ADOT layer and sharing it with your accounts. 
+
+## Tracer and Decorator Usage
+
+In the lambda function itself we must first initialize a [tracer](./lib/lambda_code/spenco/spenco.py#L7).
+We will use this tracer throughout the entire function. 
+
+In each function within our Lambda Function, you can see calling of the [decorator](./lib/lambda_code/spenco/spenco.py#L18).
+The value I am passing to the decorator is arbitrary and will show up in the Trace. I decided that it made
+most sense to use the name of the function. 
+
+## Attributes
+
+In other parts of the lambda code you can see that I am setting particular [attributes](./lib/lambda_code/spenco/spenco.py#L72) I want to return to OTEL. 
+These attributes in the case of this example will actually be published to AWS X-Ray and visible within the AWS Console. 
+This can be useful for adding metadata about the execution to your traces. 
+
+## Metrics
+
+Metrics can be published but first they must be [initialized](./lib/lambda_code/spenco/spenco.py#L8-15). 
+
+Here I am creating a simple success and failure metric. The metric is then called when a [successful operation](./lib/lambda_code/spenco/spenco.py#L85) happens, or when a [failure](./lib/lambda_code/spenco/spenco.py#L97)
+happens. 
+
+By Publishing metrics alone they do not end up in AWS CloudWatch. For this we must use the AWS EMF Exporter.
+
+## AWS EMF Exporter
+
+In the [config.yaml](./lib/config.yaml#L10-19) you can see an example configuration of the AWS EMF Exporter that OTEL will use. 
+This is required if you wish to publish metrics to AWS CloudWatch. CloudWatch Metrics format are different from OTEL Metrics. 
+Thus they must be converted into an AWS EMF Format. That is exactly what the exporter does. 
+
+## Exception Recording
+
+When a failure does occur it is often useful to have the exception that was raised without having to comb through logs.
+Using OTEL you can [record exceptions](./lib/lambda_code/spenco/spenco.py#L98). The contents of the exception will be visible in 
+X-Ray with the trace.
