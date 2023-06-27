@@ -2,7 +2,7 @@
 
 This repository showcases how to use OpenTelemetry with AWS Lambda and X-Ray for enhanced observability.
 
-For information on what each component is doing see the [Project Breakdown](#Project Breakdown) section.
+For information on what each component is doing see the [Project Breakdown](#project-breakdown) section.
 
 ## Deploying This Project
 
