@@ -80,7 +80,7 @@ By Publishing metrics alone they do not end up in AWS CloudWatch. For this we mu
 
 ## AWS EMF Exporter
 
-In the [config.yaml](./lib/config.yaml#L10-19) you can see an example configuration of the AWS EMF Exporter that OTEL will use. 
+In the [config.yaml](./lib/config.yaml#L10-L19) you can see an example configuration of the AWS EMF Exporter that OTEL will use. 
 This is required if you wish to publish metrics to AWS CloudWatch. CloudWatch Metrics format are different from OTEL Metrics. 
 Thus they must be converted into an AWS EMF Format. That is exactly what the exporter does. 
 
